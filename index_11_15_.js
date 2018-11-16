@@ -3,7 +3,7 @@
 const express = require('express');
 const app = express();
 app.use(express.static('static'));
-
+/*
 const fs = require('fs');
 const path = require('path');
 const htmlPath = path.join(__dirname,'./static/index.html');
@@ -13,7 +13,7 @@ const html = fs.readFileSystem(htmlPath,'utf8');
 app.get('/',(req,res)=>{ 
 
 }
-
+*/
 //配列作成
 const ary = [];
 const width = 10;
