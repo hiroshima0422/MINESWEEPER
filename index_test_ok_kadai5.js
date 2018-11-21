@@ -2,9 +2,6 @@
 
 const express = require('express');
 const app = express();
-
-app.use(express.static('static'));
-
 //配列作成
 const ary = [];
 const width = 10;
@@ -34,18 +31,8 @@ while(count < bomCount){
     ary[rand_y][rand_x].hasBom = true;
     count ++;
 }
-
-
-
 //console.log(ary);
-app.get('/board',(req,res)=>{
-    
-    //res.contentType("application/json");
-    //res.end(JSON.stringify({"test": "hoge"}));
-    
-    
-    let user = req.query.user;
-    
+app.get('/board',(req,res)=>{ 
     //テスト用
     //**************** */
     //req.query.x=0;
@@ -55,15 +42,6 @@ app.get('/board',(req,res)=>{
     元データ書き換え  
     **************/
    //openedをtrueに
-   if(req.query.user===undefined){
-    req.query.user='hiro'
-   }
-   if(req.query.x===undefined){
-    req.query.x=9
-   }
-   if(req.query.y===undefined){
-    req.query.y=9
-   }
     ary[req.query.y][req.query.x].opened = true;
     /*課題4
             [
@@ -97,35 +75,21 @@ app.get('/board',(req,res)=>{
     for (  let i = 0;  i < width;  i++) {
         ary_f[i] = new Array();
         for(let j = 0; j < height; j++) {
-            if(ary[i][j].opened===true){
-                ary_f[i][j] = {
-                    //テスト用
-                    /************** */
-                    hasBom:false,
-                    //************** */
-                    user: user,
-                    opened:false,
-                    exploded:false,
-                    next_to:0
-                };
-            }else{
-                ary_f[i][j] = {
-                    //テスト用
-                    /************** */
-                    hasBom:false,
-                    //************** */
-                    //user: user,
-                    opened:false,
-                    exploded:false,
-                    next_to:0
-                };
-            }
+            ary_f[i][j] = {
+                //テスト用
+                /************** */
+                //hasBom:false,
+                //************** */
+                //opened:false,
+                //exploded:false,
+                next_to:0
+            };
             //テスト用
             /************** */
-            ary_f[i][j].hasBom = ary[i][j].hasBom;
+            //ary_f[i][j].hasBom = ary[i][j].hasBom;
             //************** */
-            ary_f[i][j].opened = ary[i][j].opened;
-            ary_f[i][j].exploded = ary[i][j].exploded;
+            //ary_f[i][j].opened = ary[i][j].opened;
+            //ary_f[i][j].exploded = ary[i][j].exploded;
         }
     }
     
@@ -166,10 +130,10 @@ app.get('/board',(req,res)=>{
             }
 
             ary_f[i][j].next_to= ary_next_to_sum;
-
-            /*if(ary[i][j].hasBom === true){
+            if(ary[i][j].hasBom === true){
                 ary_f[i][j].next_to= "●";
-            }*/
+
+            }
                             
                             
                         
@@ -184,8 +148,7 @@ app.get('/board',(req,res)=>{
     res.json(ary_f);
     //res.json(ary_next_to);
 
-    
-
 });
 
 app.listen(8000);
+

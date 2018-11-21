@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+
+    </head>
+    <body>
+         
+        <div id="app"></div>
+
+          
+
+        <style>
+
+        </style>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script>
+//課題７　フロント開発を始める
+  console.log(localStorage.user); // 名前
+        if(localStorage.user){
+            let user = localStorage.user;
+                
+            
+        }else{
+            let result = prompt('名前を入力してください', '名前');
+
+            if(result){
+                localStorage.setItem('user', result);
+                
+            //入力した場合
+            } else {
+            //キャンセルを押した場合
+            let result = prompt('名前を入力してください。<br>ゲームが始められません。', '名前');
+
+                if(result){
+                    localStorage.setItem('user', result);               
+                } else {
+                    //キャンセルを押した場合
+                    alert('また、お願いします。');
+                }
+            }
+        }
+        
+        </script>
+    </body>
+</html>
+

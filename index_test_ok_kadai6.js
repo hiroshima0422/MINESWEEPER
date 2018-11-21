@@ -2,9 +2,6 @@
 
 const express = require('express');
 const app = express();
-
-app.use(express.static('static'));
-
 //配列作成
 const ary = [];
 const width = 10;
@@ -34,18 +31,9 @@ while(count < bomCount){
     ary[rand_y][rand_x].hasBom = true;
     count ++;
 }
-
-
-
 //console.log(ary);
-app.get('/board',(req,res)=>{
-    
-    //res.contentType("application/json");
-    //res.end(JSON.stringify({"test": "hoge"}));
-    
-    
+app.get('/board',(req,res)=>{ 
     let user = req.query.user;
-    
     //テスト用
     //**************** */
     //req.query.x=0;
@@ -55,15 +43,6 @@ app.get('/board',(req,res)=>{
     元データ書き換え  
     **************/
    //openedをtrueに
-   if(req.query.user===undefined){
-    req.query.user='hiro'
-   }
-   if(req.query.x===undefined){
-    req.query.x=9
-   }
-   if(req.query.y===undefined){
-    req.query.y=9
-   }
     ary[req.query.y][req.query.x].opened = true;
     /*課題4
             [
@@ -184,8 +163,7 @@ app.get('/board',(req,res)=>{
     res.json(ary_f);
     //res.json(ary_next_to);
 
-    
-
 });
 
 app.listen(8000);
+

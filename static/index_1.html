@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+
+    </head>
+    <body>
+        <h1>aaaa</h1>    
+        <div id="app"></div>
+
+        
+          
+              <!-- パスワードリセットモーダル -->
+              <div class="view modal fade" id="passwordResetModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <form id="password-reset-form">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">パスワードリセット</h4>
+                      </div>
+                      <div class="modal-body">
+                          <div class="form-group password-reset__email">
+                            <label for="password-reset-email" class="control-label">メールアドレスを入力してください</label>
+                            <input type="email" class="form-control" id="password-reset-email" required>
+                          </div>
+                          <div class="alert alert-danger password-reset__help"></div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
+                        <button type="submit" class="btn btn-primary password-reset__submit-button">メールを送信</button>
+                      </div>
+                    </form>
+                  </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+              </div><!-- /#passwordResetModal -->
+          
+              
+          
+              
+          
+
+        <style>
+
+            /* すべての画面を最初は表示しない */
+                .view {
+                display: none;
+                }
+
+
+
+
+        </style>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script>
+
+
+
+
+        /*
+            var xhr = new XMLHttpRequest();
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        console.log(xhr.response);
+                    } else {
+                        console.log("status = " + xhr.status);
+                    }
+                }
+xhr.open("GET", url);
+xhr.responseType = "json";
+xhr.send();
+*/
+  console.log(localStorage.user); // 名前
+        if(localStorage.user){
+            
+                
+            
+        }else{
+            let result = prompt('名前を入力してください', '名前');
+
+            if(result){
+                localStorage.setItem('user', result);
+                
+            //入力した場合
+            } else {
+            //キャンセルを押した場合
+            let result = prompt('名前を入力してください。<br>ゲームが始められません。', '名前');
+
+                if(result){
+                    localStorage.setItem('user', result);               
+                } else {
+                    //キャンセルを押した場合
+                    alert('また、お願いします。');
+                }
+            }
+        }
+        /****************************
+        課題8　ポーリングでサーバーに問い合わせながらフロント開発
+        ****************************/
+        const render = (board) => {
+            // DOMを破棄
+            $("#app").empty();
+            // 再構築
+        };
+
+        setInterval(() => {
+        // 0.5秒ごとにサーバーにポーリング
+        $.getJSON('/board', render);
+        }, 500);
+
+        $('.block').click(function() {
+        // xとyを算出する
+        $.getJSON('/board', {
+            x: x,
+            y: y,
+            user: user,
+        }, render);
+        });
+
+        //$(document).ready(function() {      
+     /*   $("#submit").click(function () {
+            $.ajax({
+                url: 'static/index.html',
+                data: {
+                    text: $("#text").val()
+                },
+                method: "POST"
+            });
+            return false;
+        });*/
+        
+    //});
+        </script>
+    </body>
+</html>
+
