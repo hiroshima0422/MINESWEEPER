@@ -5,20 +5,21 @@
 
     </head>
     <body>
-         
-        <div id="app"></div>
-
-          
-
+        <h1>aaaa</h1>    
+        <div id="app">bbb</div>
+        <button id = "button">ボタンです</button>
+        <div class="cssSprite">
+            <a href="#">ロゴ</a>
+            </div>
         <style>
 
         </style>
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script>
-//課題７　フロント開発を始める
+
   console.log(localStorage.user); // 名前
         if(localStorage.user){
-            let user = localStorage.user;
+            
                 
             
         }else{
@@ -40,6 +41,36 @@
                 }
             }
         }
+        /****************************
+        課題8　ポーリングでサーバーに問い合わせながらフロント開発
+        ****************************/
+        //jsonファイルを読み込むだけの場合は、urlとcallbackだけ指定することが多いです。
+        //getJSON( url [, data] [, callback] )
+        const render = (ary_f) => {  //(引数,...)=>{...関数の本体...}
+            // DOMを破棄
+            console.log(ary_f);
+            $("#app").empty();
+            // 再構築
+            for (  let i = 0;  i < 10;  i++) {
+                $("#app").append('<div class="block">');
+            }
+            
+        };
+
+        //setInterval(() => {
+            // 0.5秒ごとにサーバーにポーリング
+            $.getJSON('/board', render);
+        //}, 500);
+
+        $('.block').click(function() {
+        // xとyを算出する
+        $.getJSON('/board', {
+            x: x,
+            y: y,
+            user: user,
+        }, render);
+        });
+
         
         </script>
     </body>
