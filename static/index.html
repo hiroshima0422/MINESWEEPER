@@ -5,18 +5,48 @@
 
     </head>
     <body>
-        <h1>aaaa</h1>    
-        <div id="app">bbb</div>
-        <button id = "button">ボタンです</button>
-        <div class="cssSprite">
-            <a href="#">ロゴ</a>
-            </div>
+           
+            <div id="app">
+           <p>ppp</p>
+        </div>
+        
+        
+        
         <style>
+            body{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                
+            
+           
+                /*background-color: black;*/
+            }
+             #app{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 600px;
+                height: 600px;
+            
+           
+                /*background-color: black;*/
+            }
+            td.cell{
+                background-color: green;
+                width:30px;
+                height: 30px;
+            }
+            
+
+            
 
         </style>
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script>
 
+                
+            
   console.log(localStorage.user); // 名前
         if(localStorage.user){
             
@@ -46,29 +76,100 @@
         ****************************/
         //jsonファイルを読み込むだけの場合は、urlとcallbackだけ指定することが多いです。
         //getJSON( url [, data] [, callback] )
-        const render = (ary_f) => {  //(引数,...)=>{...関数の本体...}
+        const render = (board) => {  //(引数,...)=>{...関数の本体...}
             // DOMを破棄
-            console.log(ary_f);
+            console.log(board[0][0].next_to);
+            console.log("empty");
             $("#app").empty();
             // 再構築
-            for (  let i = 0;  i < 10;  i++) {
-                $("#app").append('<div class="block">');
-            }
+            $('<table>').appendTo('#app');
+                for (let i = 0;i < 10; i++){
+                    $('<tr id = "tr' + i + '">').appendTo('table');
+                    for (let j = 0;j<10;j++){
+                        let backgroundPosition_num = 2
+                        $('<td id = "td' + j + '">', {
+                            id:"cell" + i + j,class:'block',onclick:'clicked',x:i,y:j,text:'td'
+                        }).appendTo('#tr' + i).css({
+                            /*display:"block",*/
+                            width:"30px",
+                            height:"30px",
+                            padding: "0",
+                            backgroundImage:"url(img.png)",
+                            backgroundPosition: backgroundPosition(backgroundPosition_num),
+                            whiteSpace:"nowrap",
+                            textIndent:"100%",
+                            overflow:"hidden"
+                            
+                        });
+                        /*.css({
+                            display:"block",
+                            width:"30px",
+                            height:"30px",
+                            backgroundImage:"url(img.png) no-repeat",
+                            whiteSpace:"nowrap",
+                            textIndent:"100%",
+                            overflow:"hidden"
+                        });*/
+                    }
+                    
+                }
             
-        };
+            
+        }
 
+        function backgroundPosition(backgroundPosition_num){
+            /*let backgroundPosition = 2;*/
+            switch (backgroundPosition_num){
+                case 1:
+                    return "0px";
+                    break;
+                case 2:
+                    return "-30px";
+                    break;
+                case 3:
+                    return "-60px";
+                    break;
+                case 4:
+                    return "-90px";
+                    break;
+                case 5:
+                    return "-120px";
+                    break;
+                case 6:
+                    return "-150px";
+                    break;
+                case 7:
+                    return "-180px";
+                    break;
+                case 8:
+                    return "-210px";
+                    break;
+                case 9:
+                    return "-240px";
+                    break;
+                case 10:
+                    return "-270px";
+                    break;
+                case 11:
+                    return "-300px";
+                    break;
+                case 12:
+                    return "-330px";
+                    break;
+            }
+        }
         //setInterval(() => {
             // 0.5秒ごとにサーバーにポーリング
             $.getJSON('/board', render);
         //}, 500);
 
         $('.block').click(function() {
-        // xとyを算出する
-        $.getJSON('/board', {
-            x: x,
-            y: y,
-            user: user,
-        }, render);
+            // xとyを算出する
+            $.getJSON('/board', {
+                x: x,
+                y: y,
+                user: user,
+            }, render);
         });
 
         

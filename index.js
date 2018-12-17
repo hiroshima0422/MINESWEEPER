@@ -37,12 +37,17 @@ while(count < bomCount){
 
 //console.log(ary);
 app.get('/board',(req,res)=>{
-    
+    console.log('board_js_ok');
+    //console.log('req.query');
+    //console.log(req.query);
+    //console.log('res');
+    //console.log(res);
   //res.contentType("application/json");
   //res.end(JSON.stringify({"test": "hoge"}));
   
   
   let user = req.query.user;
+  console.log(req.query);
   
   //テスト用
   //**************** */
@@ -176,12 +181,11 @@ app.get('/board',(req,res)=>{
   }
   
 
-
-  //console.dir(ary_f);
+//console.dir(ary_f);
   //res.json(ary);
   res.json(ary_f);
   //res.json(ary_next_to);
-  console.log(ary_f);
+  //console.log(ary_f);
   
 
 });
