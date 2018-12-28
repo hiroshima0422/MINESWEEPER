@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+
+    </head>
+    <body>
+           
+            <div id="app">
+                
+           
+        </div>
+        
+        
+        
+        
+        <style>
+            body{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                
+            
+           
+                /*background-color: black;*/
+            }
+             #app{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 600px;
+                height: 600px;
+            
+           
+                /*background-color: black;*/
+            }
+            td.cell{
+                background-color: green;
+                width:30px;
+                height: 30px;
+            }
+            
+
+            
+
+        </style>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script>
+
+                
+            
+  //console.log(localStorage.user); // 名前
+        if(localStorage.user){
+            
+                
+            
+        }else{
+            let result = prompt('名前を入力してください', '名前');
+
+            if(result){
+                localStorage.setItem('user', result);
+                
+            //入力した場合
+            } else {
+            //キャンセルを押した場合
+            let result = prompt('名前を入力してください。<br>ゲームが始められません。', '名前');
+
+                if(result){
+                    localStorage.setItem('user', result);               
+                } else {
+                    //キャンセルを押した場合
+                    alert('また、お願いします。');
+                }
+            }
+        }
+        let user = localStorage.user;
+        /****************************
+        課題8　ポーリングでサーバーに問い合わせながらフロント開発
+        ****************************/
+        //jsonファイルを読み込むだけの場合は、urlとcallbackだけ指定することが多いです。
+        //getJSON( url [, data] [, callback] )
+
+        /*const target = document.getElementById('target');
+            let count = 0;
+
+            target.oncontextmenu = () => {
+            　　//処理
+                return false;
+            }*/
+
+        const render = (board) => {  //(引数,...)=>{...関数の本体...}
+        //board[9][9].next_to = 8;
+            // DOMを破棄
+            console.log(board);
+            //console.log("empty");
+            let backgroundPosition_num;
+            $("#app").empty();
+            // 再構築
+            //console.log(board[3][6].opened);
+            $('<table>').appendTo('#app');
+                for (let i = 0;i < 10; i++){
+                    $('<tr id = "tr' + i + '">').appendTo('table');
+                    for (let j = 0;j<10;j++){
+                        $('<td id = "td' + j + '">').appendTo('#tr' + i).css({
+                                    /*display:"block",*/
+                            width:"30px",
+                            height:"30px",
+                            padding: "0",                               
+                            //background: '#FF6600',
+                            whiteSpace:"nowrap",
+                            textIndent:"100%",
+                            overflow:"hidden"                                   
+                        });
+                        switch (board[j][i].opened){
+                                case "click_ok":
+                                    let backgroundPosition_num = 10;
+                                    $('<td id = "td' + j + '">').click(function() {
+                                            $.getJSON('/board', {
+                                            x: j,
+                                            y: i,
+                                            user: user,
+                                        }, render);
+                                    }).css({  
+                                        background: '#FF6600'                                
+                                    });
+                                    break;
+                                /*case "hata":
+                                    let backgroundPosition_num = 10;
+                                    $('<td id = "td' + j + '">').css({  
+                                        backgroundImage:"url(img.png)",
+                                        backgroundPosition: backgroundPosition(backgroundPosition_num),                                  
+                                    });
+                                    break;*/
+                                case false:
+                                    $('<td id = "td' + j + '">').addClass('block').click(function() {
+                                        // xとyを算出する
+                                        $.getJSON('/board', {
+                                            x: j,
+                                            y: i,
+                                            user: user,
+                                        }, render);
+                                        }).on('contextmenu',function(){
+                                        　　//右クリック処理
+                                            $.getJSON('/board', {
+                                                x: j,
+                                                y: i,
+                                                opened: "hata",
+                                            }, render);
+                                            return false;
+                                        }).css({                                                           
+                                            background: '#FF6600',                                 
+                                        });
+                                    break;
+                                case true:
+                                    if(board[i][j].next_to > 0){
+                                            $('<td id = "td' + j + '">').css({  
+                                                backgroundImage:"url(img.png)",
+                                                backgroundPosition: backgroundPosition(board[i][j].next_to),                                  
+                                            });
+                                        }else{
+                                            $('<td id = "td' + j + '">').css({                             
+                                                background: '#0070C0',
+                                            });
+                                        }
+                                    break;                               
+                            }                      
+                        }
+                    }
+                }
+                    
+                
+            
+            
+        
+
+        function backgroundPosition(backgroundPosition_num){
+            /*let backgroundPosition = 2;*/
+            switch (backgroundPosition_num){
+                case 1:
+                    return "0px";
+                    break;
+                case 2:
+                    return "-30px";
+                    break;
+                case 3:
+                    return "-60px";
+                    break;
+                case 4:
+                    return "-90px";
+                    break;
+                case 5:
+                    return "-120px";
+                    break;
+                case 6:
+                    return "-150px";
+                    break;
+                case 7:
+                    return "-180px";
+                    break;
+                case 8:
+                    return "-210px";
+                    break;
+                case 9:
+                    return "-240px";  //？
+                    break;
+                case 10:
+                    return "-270px";  // 旗
+                    break;
+                case 11:
+                    return "-300px";
+                    break;
+                case 12:
+                    return "-330px";
+                    break;
+            }
+        }
+        //setInterval(() => {
+            // 0.5秒ごとにサーバーにポーリング
+            $.getJSON('/board', render);
+        //}, 500);
+
+        
+
+        
+        </script>
+    </body>
+</html>
+

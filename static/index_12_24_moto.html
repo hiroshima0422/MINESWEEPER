@@ -2,14 +2,19 @@
 <html>
     <head>
         <meta charset="UTF-8">
+
     </head>
     <body>
             <div id="game_area">
             <table>
-                <tr><th>あなたの点数</th><th><span id="tensuu"></span>点</th></tr>
-                <tr><td colspan="2"><div id="app"></div></td></tr>
-                <tr><td></td><td><button id="reset">リセット</button></td></tr>
-            </table>          
+                    <tr><th>あなたの点数</th><th><span id="tensuu"><span>点</th></tr>
+                    <tr><td colspan="2"><div id="app"></div></td></tr>
+                    <tr><td></td><td><button id="reset">リセット</button></td></tr>
+                  </table>
+        
+            
+                
+           
         </div>
         
         
@@ -20,20 +25,28 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                
+            
+           
+                /*background-color: black;*/
             }
              #app{
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                
+            
+           
+                /*background-color: black;*/
             }
-            #game_area table{ 
+            #game_area table{
+                /*border-collapse: separate;
+                border-spacing: 5px;*/
                 border-collapse: separate;
-                border: solid 0px #000000;
+                border: solid 1px #000000;
                 margin: 0 auto;
-                width: 360px;
-                height: 360px;
             }
-            #game_area td,th{          
+            #game_area td,th{
                 padding: 10px;
                 text-align: center;
                 background: #F0FFFF; 
@@ -42,23 +55,26 @@
             #game_area th{
                 width: 50%;
             }
+            
+            
+            
+
+            
+
         </style>
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script>
-/*右クリックのイベントキャンセル  */
-             //<!--
-                window.onload = function() {
-                    document.body.oncontextmenu = function () {
-                        return false;
-                    }
-                }
-            // -->
+/*作成追加課題
+    width ,heigth     データをもらう
+    リセット時
+    localStorage消去
+
+*/
 //userdata配列作成
 let game_data = [];
 const width = 10;
 const height = 10;
-let user;
-          //自分の旗データ作成      
+          //旗データ作成      
                 for (  let i = 0;  i < width;  i++) {
                     game_data[i] = new Array();
                     for(let j = 0; j < height; j++) {
@@ -67,36 +83,45 @@ let user;
                         };
                     }
                 }
-        if(localStorage.user){
-            user = localStorage.user;                     
-        }else{
-            user_name_input();
+    //旗データ呼び出し
+        if(localStorage.game_data){
+            //onsole.log(localStorage.game_data);
+            game_data = JSON.parse(localStorage.game_data);
+            //onsole.log(localStorage.game_data);
+            //game_data = localStorage.game_data;             
+            
         }
-        console.log(user);
+
 /*ユーザー名入力 alert*/
 function user_name_input(){                           
-        let result = prompt('名前を入力してください', '名前');
-
-        if(result){
-            localStorage.setItem('user', result);
-            
-        //入力した場合
-        } else {
-        //キャンセルを押した場合
-        let result = prompt('名前を入力してください。<br>ゲームが始められません。', '名前');
+  //console.log(localStorage.user); // 名前
+    let user_name;
+        if(localStorage.user){
+            user_name = localStorage.user;
+            //console.log(user);          
+        }else{
+            let result = prompt('名前を入力してください', '名前');
 
             if(result){
-                localStorage.setItem('user', result);               
+                localStorage.setItem('user_name', result);
+                
+            //入力した場合
             } else {
-                //キャンセルを押した場合
-                alert('また、お願いします。');
+            //キャンセルを押した場合
+            let result = prompt('名前を入力してください。<br>ゲームが始められません。', '名前');
+
+                if(result){
+                    localStorage.setItem('user_name', result);               
+                } else {
+                    //キャンセルを押した場合
+                    alert('また、お願いします。');
+                }
             }
         }
-    
-    
-    //console.log(user);
-    return user;   
-}       
+        
+     console.log(user_name);
+     return user_name;   
+    }       
         
         /****************************
         課題8　ポーリングでサーバーに問い合わせながらフロント開発
@@ -106,15 +131,33 @@ function user_name_input(){
 
 /*レスポンス*/
     const render = (board) => {  //(引数,...)=>{...関数の本体...}
+        //board[9][9].next_to = 8;
             // DOMを破棄
             console.log(board);
+
+        if(board==='req_user'){
+            //user_name_input();
+            user_name = user_name_input();
+            console.log(user_name);
+        }else{
+            
+            //console.log(a);
+            //console.log(board[tensuu]);
+            //console.log("empty");
             let backgroundPosition_num;
             // 再構築
             $("#app").empty();
+
         /*点数表示*/
             $("#tensuu").empty();
-            
             $('#tensuu').text(board[10].tensuu?board[10].tensuu:0);
+
+            /*if(board[11].game_over===undefined){
+
+            }else{
+                confirm(user +'さんの点数は' + tensuu + 'です。<br>ゲームを終了する場合は　OK ゲームをリセットする場合は　キャンセル　を押してください。');
+            
+            }*/
             
          /*レスポンスデータによってゲームを表示*/  
             $('<table>').appendTo('#app');
@@ -133,28 +176,32 @@ function user_name_input(){
                                 textIndent:"100%",
                                 overflow:"hidden"                                     
                             });
-                            //break;
+                            break;
                         /*ユーザーが旗をを選択　レスポンスデータによってゲームを表示*/    
-                        }else if(board[i][j].opened === 'hata'){ 
-                            console.log('hata_x'); 
-                            console.log(user);      
+                        }else if(board[i][j].hata === 'hata'){          
                             $('<td id = "td' + i + '">').appendTo('#tr' + j).click(function() {
 
                                     // クリック時の処理
+                                    $(this).click(function() {
                                             $.getJSON('/board', {
                                             x: i,
                                             y: j,
                                             user: user,
-                                            opened: "hata_reset",
+                                        }, render);
+                                        //game_data_make();
                                     //右クリック処理
-                                    }, render);
-                                }).on('contextmenu',function(){
+                                    }).on('contextmenu',function(){
                                             $.getJSON('/board', {
                                                 x: i,
                                                 y: j,
-                                                user: user,
                                                 opened: "hata",
                                             }, render);
+                                            /*旗データをローカルに保存*/
+                                            game_data_make(i,j);
+                                            console.log(game_data);
+                                            localStorage.setItem('game_data', JSON.stringify(game_data));
+                                            
+                                            //return false;
                                         }).css({
                                         width:"30px",
                                         height:"30px",
@@ -167,21 +214,18 @@ function user_name_input(){
                                         boxShadow: "2px 2px 4px gray"
                                     // カーソルが当たった時の処理
                                     }).hover(function() {
+
                                         // カーソルが当たった時の処理
-                                        $(this).css({
-                                                    "top":"-10px",
-                                                    "left":"-10px",
-                                                    "box-shadow":"1px 1px #000000"
-                                                });  //limegreen
+                                        $(this).css("background-color", "#32CD32");  //limegreen
 
                                         }, function() {
+
                                         // カーソルが離れた時の処理
-                                        $(this).css({
-                                                "top":"0px",
-                                                "left":"0px",
-                                                "box-shadow":"0px 0px #000000"});// 戻る　
-                                        }
-                                    ).css({ 
+                                        $(this).css("background-color", "#7CFC00");// 戻る　lawngreen
+
+                                        })
+                                    })
+                                .css({ 
                                 width:"30px",
                                 height:"30px",
                                 padding: "0",   
@@ -191,7 +235,7 @@ function user_name_input(){
                                 textIndent:"100%",
                                 overflow:"hidden"                                     
                             });
-                            //break;
+                            break;
                         }else{
                             switch (board[i][j].opened){
                                 case false:
@@ -204,27 +248,31 @@ function user_name_input(){
                                             textIndent:"100%",
                                             overflow:"hidden",
                                             borderRadius:"5px",
-                                            boxShadow: "2px 2px 4px gray"                                   
+                                            boxShadow: "2px 2px 4px gray"                                     
                                         });
                                     break;
                                 case "click_ok":
                                     let backgroundPosition_num = 10;
                                     $('<td id = "td' + i + '">').appendTo('#tr' + j).click(function() {
-                                            console.log('');
                                             $.getJSON('/board', {
                                             x: i,
                                             y: j,
-                                            user: user
+                                            user: user,
                                         }, render);
-
+                                        //game_data_make();
                                     }).on('contextmenu',function(){
                                         　　//右クリック処理
                                             $.getJSON('/board', {
                                                 x: i,
                                                 y: j,
-                                                user: user,
-                                                opened: "hata"
+                                                opened: "hata",
                                             }, render);
+                                            /*旗データをローカルに保存*/
+                                            game_data_make(i,j);
+                                            console.log(game_data);
+                                            localStorage.setItem('game_data', JSON.stringify(game_data));
+                                            
+                                            //return false;
                                         }).css({
                                         width:"30px",
                                         height:"30px",
@@ -235,25 +283,31 @@ function user_name_input(){
                                         overflow:"hidden",
                                         borderRadius:"5px",
                                         boxShadow: "2px 2px 4px gray"
+   
                                     }).hover(function() {
+
                                         // カーソルが当たった時の処理
                                         $(this).css("background-color", "#32CD32");  //limegreen
+
                                         }, function() {
+
                                         // カーソルが離れた時の処理
                                         $(this).css("background-color", "#7CFC00");// 戻る　lawngreen
-                                        });                                 
-                                        break;                                  
+
+                                        });
+                                    
+                                   
+                                        break;
+                                        
+                                    
                                     case true:
                                         if(board[i][j].next_to > 0){
                                             $('<td id = "td' + i + '">').appendTo('#tr' + j).css({
                                                 width:"30px",
                                                 height:"30px",
-                                                padding: "0",
-                                                border:"1px solid #FF0000",
-                                                boxShadow: "2px 2px 4px #FF0000",  
+                                                padding: "0",  
                                                 backgroundImage:"url(img.png)",
                                                 backgroundPosition: backgroundPosition(board[i][j].next_to), 
-                                                /*backgroundPosition: backgroundPosition(1), */
                                                 whiteSpace:"nowrap",
                                                 textIndent:"100%",
                                                 overflow:"hidden"                                 
@@ -263,9 +317,7 @@ function user_name_input(){
                                             $('<td id = "td' + i + '">').appendTo('#tr' + j).css({ 
                                                 width:"30px",
                                                 height:"30px",
-                                                padding: "0",
-                                                border:"1px solid #FF0000",
-                                                boxShadow: "2px 2px 4px #FF0000",                             
+                                                padding: "0",                              
                                                 background: '#0070C0',
                                                 whiteSpace:"nowrap",
                                                 textIndent:"100%",
@@ -278,15 +330,15 @@ function user_name_input(){
                             }                      
                         }
                     }
-                    if(board[11] && board[11].game_over === 'game_over'){
-                            alert(user + 'さんの点数は' + board[10].tensuu + '点です。\nお疲れ様でした。\nリセットしてゲームをしたい場合は、リセットボタンを押してください。');                           
-                    }                     
-        }
-       
-/*画像選択*/
+                }
+            }       
+                
+            
+            
+        
+/*画像選択
         function backgroundPosition(backgroundPosition_num){
             /*let backgroundPosition = 2;*/
-            
             switch (backgroundPosition_num){
                 case 1:
                     return "0px";
@@ -316,7 +368,7 @@ function user_name_input(){
                     return "-240px";  //？
                     break;
                 case 10:
-                    return "-268px";  // 旗
+                    return "-270px";  // 旗
                     break;
                 case 11:
                     return "-300px";
@@ -325,7 +377,6 @@ function user_name_input(){
                     return "-330px";
                     break;
             }
-        }
         
 
         function game_data_make(x,y){
@@ -333,32 +384,24 @@ function user_name_input(){
                 //console.log(game_data);
             
                 game_data[x][y] = {'hata':'hata'};                       
-           // console.log(game_data[x][y]);
+            console.log(game_data[x][y]);
         }
 
-        
-        
 
-        setInterval(() => {
+        //setInterval(() => {
             // 0.5秒ごとにサーバーにポーリング
             $.getJSON('/board', render);
-        }, 500);
-
-        /* リセットボタン*/
-        $('#reset').click(function() {
-            $.getJSON('/reset', {
-                user: user,
-            }, render);
-        });
-
-
+        //}, 500);
         
-
-        
-        
-
-        
+            $('#reset').click(function() {
+                console.log('reset');
             
+                $.getJSON('/reset',{
+                
+                    user: user,
+                });
+            
+        });
 
         
 
