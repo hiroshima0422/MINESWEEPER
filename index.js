@@ -63,14 +63,21 @@ function data_make(ary,x,y,user,opened){
             
     }else{      
         if(ary[x][y].hasBom === true){         
-            // ミスで誘爆した
+            
+            if(opened === 'hata'){
+                ary[x][y].opened = 'hata';
+            }else if(opened === 'hata_reset'){
+                ary[x][y].opened = false;
+            }else{
+                // ミスで誘爆した
                      /*爆弾選択 //爆弾判定  アクセスした場所に爆弾があった*/   
             ary[x][y].exploded = true;
             ary[x][y].opened = true;                 
             /*{ // 上のミスで誘爆した
                 exploded: true,
                 opened: false, // 閉じたまま
-                },*/                                    
+                },*/
+            }                                    
         }else{
             /*爆弾以外を選択*/
             if(opened === 'hata'){
