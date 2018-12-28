@@ -9,10 +9,8 @@ app.use(express.static('static'));
 let tensuu = 0;
 //配列作成
 let ary = [];
-const width = 9;
-const height = 9;
-
-
+const width = 10;
+const height = 10;
 const bomCount = 10;
 /*  初期データ作成*/
 ary = basic_data_make();
@@ -31,17 +29,19 @@ function basic_data_make(){
             }
         }
 
-          
-                    //ary[(width-1/2)+1][(height-1/2)+1].opened = true;       
-                    ary[4][4].opened = true;   
+        for ( let i = width/2-1;  i < width/2+1;  i++) {           
+            for(let j = height/2-1; j < height/2+1; j++) {        
+                    ary[i][j].opened = true;       
+            }
+        }
 
 
         //ランダムに10個の爆弾を作成
         let count = 0;
         while(count < bomCount){
 
-            const rand_x = Math.floor(Math.random()*width);
-            const rand_y = Math.floor(Math.random()*height);
+            const rand_x = Math.floor(Math.random()*10);
+            const rand_y = Math.floor(Math.random()*10);
 
 
             if(ary[rand_y][rand_x].hasBom === true || ary[rand_y][rand_x].opened === true){
@@ -49,7 +49,33 @@ function basic_data_make(){
             }
             ary[rand_y][rand_x].hasBom = true;
             count ++;
-        }     
+        } 
+        ary['user'] = new Array();
+
+        //console.log(ary['user']);
+        let addData ={id : '1234',mail : 'hiro@com',name:'hiro',tensuu:0,status:[]};
+        ary['user'].push(addData);
+        //console.log(ary['user'][0].status);
+        statusData ={'hata':'hata'};
+        ary['user'][0].status.push(statusData);
+        //console.log(ary['user'][0].status);
+
+        for (  let i = 0;  i < width;  i++) {
+            ary['user'][0].status[i] = new Array();
+            //console.log(ary['user'][0].status[i]);
+            for(let j = 0; j < height; j++) {
+                ary['user'][0].status[i][j] = {
+                    //hasBom:false,
+                    //exploded: false,
+                    /*x:i,
+                    y: j,*/
+                    opened:false
+                };
+            }
+        }
+        //console.log(ary['user'][0].status[0][0]);
+        console.log(ary['user'][0].status[0][0].opened);
+        //console.log(ary);
     return ary; 
 }
 
@@ -58,11 +84,7 @@ function basic_data_make(){
 /*  データを加工作成*/
 
 function data_make(ary,x,y,user,opened){
-    if(user === undefined || x === undefined || y === undefined){
-        
-        
-        //ary_f = res_make(ary,width,height);
-        //res.json(ary_f);
+    if(x === undefined || y === undefined){
             
     }else{      
         if(ary[x][y].hasBom === true){         
@@ -92,34 +114,7 @@ function data_make(ary,x,y,user,opened){
             }
             ary[x][y].user = user;
         }
-     }
-     
-     
-     ary['user'] = new Array();
-        //console.log(ary['user']);
-        let addData ={id : '1234',mail : 'hiro@com',name:'hiro',tensuu:0,status:[]};
-        ary['user'].push(addData);
-        //console.log(ary['user'][0].status);
-        statusData ={'hata':'hata'};
-        ary['user'][0].status.push(statusData);
-        //console.log(ary['user'][0].status);
-
-        for (  let i = 0;  i < width;  i++) {
-            ary['user'][0].status[i] = new Array();
-            //console.log(ary['user'][0].status[i]);
-            for(let j = 0; j < height; j++) {
-                ary['user'][0].status[i][j] = {
-                    //hasBom:false,
-                    //exploded: false,
-                    /*x:i,
-                    y: j,*/
-                    opened:false
-                };
-            }
-        }
-        //console.log(ary['user'][0].status[0][0]);
-        //console.log(ary['user'][0].status[0][0].opened);
-        //console.log(ary);    
+     }     
     return ary; 
 }
 /*データを加工作成まで*/
@@ -131,6 +126,10 @@ app.get('/reset',(req,res)=>{
     tensuu = 0;
     ary_f = res_make(ary,width,height);
     //console.log(ary_f);
+    /*点数データ追加*/
+    let addData =
+    {"tensuu":0};
+    ary_f.push(addData);
     res.json(ary_f);
 });
 
@@ -158,12 +157,12 @@ app.get('/board',(req,res)=>{
 data_make(ary,x,y,user,opened);
 
  
-if(user === undefined || x === undefined || y === undefined){
+if(user === undefined || x === undefined || y === undefined){  
+    ary_f = res_make(ary,width,height);
     /*点数データ追加*/
-    console.log('user'); 
-    ary['user'][0].tensuu = tensuu;
-    console.log(ary['user'][0].tensuu); 
-    ary_f = res_make(ary,width,height); 
+    let addData =
+    {"tensuu":tensuu};
+    ary_f.push(addData);
     res.json(ary_f);
  }else{
     if(ary[x][y].hasBom === true){
@@ -175,19 +174,22 @@ if(user === undefined || x === undefined || y === undefined){
                       },*/
                 
         if(opened === 'hata' || opened === 'hata_reset'){                       
-            /*点数データ追加*/
-            ary['user'][0].tensuu = tensuu; 
             /*ゲームレスポンスデータ作成*/
-            ary_f = res_make(ary,width,height); 
+            let ary_f = res_make(ary,width,height);
+            /*点数データ追加*/
+            let addData =
+            {"tensuu":tensuu};
+            ary_f.push(addData);
             res.json(ary_f);
         }else{   
-            /*点数データ追加*/
-            ary['user'][0].tensuu = tensuu; 
             /*ゲームレスポンスデータ作成*/
-            ary_f = res_make(ary,width,height); 
-            /*addData =
+            let ary_f = res_make(ary,width,height);
+            //game_overと追加
+            let addData ={"tensuu":tensuu};
+            ary_f.push(addData);
+            addData =
             {game_over:'game_over'};
-            ary_f.push(addData);*/
+            ary_f.push(addData);
             res.json(ary_f);
         }                
     }else{
@@ -197,10 +199,12 @@ if(user === undefined || x === undefined || y === undefined){
         }else{
             tensuu += 1;
         }
-        /*点数データ追加*/
-        ary['user'][0].tensuu = tensuu; 
         /*ゲームレスポンスデータ作成*/
-        ary_f = res_make(ary,width,height); 
+        let ary_f = res_make(ary,width,height);
+        /*点数データ追加*/
+        let addData =
+        {"tensuu":tensuu};
+        ary_f.push(addData);
         res.json(ary_f);
     }
  }  
@@ -229,9 +233,9 @@ if(user === undefined || x === undefined || y === undefined){
 
 /*ゲームレスポンスデータ作成*/
 function res_make(ary,width,height){
-    console.log(ary);
+    /*console.log(ary);
     console.log(width);
-    console.log(height); 
+    console.log(height); */   
     //res用配列
     const ary_f = [];
     for (  let i = 0;  i < width;  i++) {
@@ -273,13 +277,9 @@ function res_make(ary,width,height){
             //************** */
             ary_f[i][j].opened = ary[i][j].opened;
             ary_f[i][j].exploded = ary[i][j].exploded;
-            //ary_f['user'][0].user = ary['user'][0].user;
-            //ary_f[i][j].exploded = ary[i][j].exploded;
-            
         }
     }
-    //
-    //console.log(ary['user'][0].tensuu);
+
 
     //8マス爆弾の数
     for (let i = 0; i < width;  i++) {       
@@ -303,8 +303,8 @@ function res_make(ary,width,height){
             let ary_next_to_sum = 0;
             let opened_num = 0;
             for(let k = 0; k < 8; k++) {
-                if(i + ary_next_to[k][0]>=0 && i + ary_next_to[k][0]<=(width-1)){
-                    if(j + ary_next_to[k][1]>=0 && j + ary_next_to[k][1]<=(height-1)){          
+                if(i + ary_next_to[k][0]>=0 && i + ary_next_to[k][0]<=9){
+                    if(j + ary_next_to[k][1]>=0 && j + ary_next_to[k][1]<=9){          
                         if(ary[i + ary_next_to[k][0]][j + ary_next_to[k][1]].hasBom === true){
                             ary_next_to_sum += 1; // 8マスに爆弾の数
                         }
@@ -322,8 +322,6 @@ function res_make(ary,width,height){
         ary_f[i][j].next_to= ary_next_to_sum;　　// 8マスに爆弾の数表示用
         }
     }
-   
-    ary_f['user'] = ary['user'];
     //console.log(ary_f);
     return ary_f;
 } 

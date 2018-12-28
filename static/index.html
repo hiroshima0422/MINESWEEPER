@@ -55,8 +55,8 @@
             // -->
 //userdata配列作成
 let game_data = [];
-const width = 10;
-const height = 10;
+const width = 9;
+const height = 9;
 let user;
           //自分の旗データ作成      
                 for (  let i = 0;  i < width;  i++) {
@@ -114,13 +114,13 @@ function user_name_input(){
         /*点数表示*/
             $("#tensuu").empty();
             
-            $('#tensuu').text(board[10].tensuu?board[10].tensuu:0);
+            //$('#tensuu').text(board['user'][0].tensuu?board['user'][0].tensuu:0);
             
          /*レスポンスデータによってゲームを表示*/  
             $('<table>').appendTo('#app');
-                for (let j = 0;j < 10; j++){
+                for (let j = 0;j < width; j++){
                     $('<tr id = "tr' + j + '">').appendTo('table');
-                    for (let i = 0;i<10;i++){
+                    for (let i = 0;i<height;i++){
                         /*爆弾を選択レスポンスデータによってゲームを表示*/ 
                         if(board[i][j].exploded === true){
                             $('<td id = "td' + i + '">').appendTo('#tr' + j).css({ 
@@ -338,10 +338,11 @@ function user_name_input(){
         /*最初の画面*/
         $.getJSON('/board', render);
 
-        setInterval(() => {
+        /*setInterval(() => {
             // 0.5秒ごとにサーバーにポーリング
             $.getJSON('/board', render);
         }, 500);
+        */
 
         /* リセットボタン*/
         $('#reset').click(function() {
