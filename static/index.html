@@ -336,8 +336,8 @@ function user_name_input(){
            // console.log(game_data[x][y]);
         }
 
-        
-        
+        /*最初の画面*/
+        $.getJSON('/board', render);
 
         setInterval(() => {
             // 0.5秒ごとにサーバーにポーリング
