@@ -6,14 +6,10 @@
     <body>
             <div id="game_area">
             <table>
-                    <tr><th>あなたの点数</th><th><span id="tensuu"></span>点</th></tr>
-                    <tr><td colspan="2"><div id="app"></div></td></tr>
-                    <tr><td></td><td><button id="reset">リセット</button></td></tr>
-                  </table>
-        
-            
-                
-           
+                <tr><th>あなたの点数</th><th><span id="tensuu"></span>点</th></tr>
+                <tr><td colspan="2"><div id="app"></div></td></tr>
+                <tr><td></td><td><button id="reset">リセット</button></td></tr>
+            </table>          
         </div>
         
         
@@ -24,32 +20,20 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                
-            
-           
-                /*background-color: black;*/
             }
              #app{
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                
-            
-           
-                /*background-color: black;*/
             }
             #game_area table{ 
-                            
-                /*border-collapse: separate;
-                border-spacing: 5px;*/
                 border-collapse: separate;
                 border: solid 0px #000000;
                 margin: 0 auto;
                 width: 360px;
                 height: 360px;
             }
-            #game_area td,th{
-                
+            #game_area td,th{          
                 padding: 10px;
                 text-align: center;
                 background: #F0FFFF; 
@@ -58,12 +42,6 @@
             #game_area th{
                 width: 50%;
             }
-            
-            
-            
-
-            
-
         </style>
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script>
@@ -75,16 +53,10 @@
                     }
                 }
             // -->
-/*作成追加課題
-    width ,heigth     データをもらう
-    リセット時
-    localStorage消去
-
-*/
 //userdata配列作成
 let game_data = [];
-const width = 10;
-const height = 10;
+const width = 9;
+const height = 9;
 let user;
           //自分の旗データ作成      
                 for (  let i = 0;  i < width;  i++) {
@@ -95,14 +67,6 @@ let user;
                         };
                     }
                 }
-    //旗データ呼び出し
-        /*if(localStorage.game_data){
-            console.log('localStorage.game_data');
-            
-            game_data = JSON.parse(localStorage.game_data);
-                      
-            
-        }*/
         if(localStorage.user){
             user = localStorage.user;                     
         }else{
@@ -111,29 +75,28 @@ let user;
         console.log(user);
 /*ユーザー名入力 alert*/
 function user_name_input(){                           
-  //console.log(localStorage.user); // 名前
-            let result = prompt('名前を入力してください', '名前');
+        let result = prompt('名前を入力してください', '名前');
+
+        if(result){
+            localStorage.setItem('user', result);
+            
+        //入力した場合
+        } else {
+        //キャンセルを押した場合
+        let result = prompt('名前を入力してください。<br>ゲームが始められません。', '名前');
 
             if(result){
-                localStorage.setItem('user', result);
-                
-            //入力した場合
+                localStorage.setItem('user', result);               
             } else {
-            //キャンセルを押した場合
-            let result = prompt('名前を入力してください。<br>ゲームが始められません。', '名前');
-
-                if(result){
-                    localStorage.setItem('user', result);               
-                } else {
-                    //キャンセルを押した場合
-                    alert('また、お願いします。');
-                }
+                //キャンセルを押した場合
+                alert('また、お願いします。');
             }
-        
-     
-     //console.log(user);
-     return user;   
-    }       
+        }
+    
+    
+    //console.log(user);
+    return user;   
+}       
         
         /****************************
         課題8　ポーリングでサーバーに問い合わせながらフロント開発
@@ -143,41 +106,21 @@ function user_name_input(){
 
 /*レスポンス*/
     const render = (board) => {  //(引数,...)=>{...関数の本体...}
-        //board[9][9].next_to = 8;
             // DOMを破棄
             console.log(board);
-
-        /*if(board==='req_user'){
-            //user_name_input();
-            user_name = user_name_input();
-            console.log('user_name_input_ok');
-            console.log(user_name);
-        }else{*/
-            
-            //console.log(a);
-            //console.log(board[tensuu]);
-            //console.log("empty");
             let backgroundPosition_num;
             // 再構築
             $("#app").empty();
-
         /*点数表示*/
             $("#tensuu").empty();
             
-            $('#tensuu').text(board[10].tensuu?board[10].tensuu:0);
-
-            /*if(board[11].game_over===undefined){
-
-            }else{
-                confirm(user +'さんの点数は' + tensuu + 'です。<br>ゲームを終了する場合は　OK ゲームをリセットする場合は　キャンセル　を押してください。');
-            
-            }*/
+            //$('#tensuu').text(board['user'][0].tensuu?board['user'][0].tensuu:0);
             
          /*レスポンスデータによってゲームを表示*/  
             $('<table>').appendTo('#app');
-                for (let j = 0;j < 10; j++){
+                for (let j = 0;j < width; j++){
                     $('<tr id = "tr' + j + '">').appendTo('table');
-                    for (let i = 0;i<10;i++){
+                    for (let i = 0;i<height;i++){
                         /*爆弾を選択レスポンスデータによってゲームを表示*/ 
                         if(board[i][j].exploded === true){
                             $('<td id = "td' + i + '">').appendTo('#tr' + j).css({ 
@@ -193,19 +136,15 @@ function user_name_input(){
                             //break;
                         /*ユーザーが旗をを選択　レスポンスデータによってゲームを表示*/    
                         }else if(board[i][j].opened === 'hata'){ 
-                            console.log('hata_x'); 
                             console.log(user);      
                             $('<td id = "td' + i + '">').appendTo('#tr' + j).click(function() {
 
                                     // クリック時の処理
-                                    
                                             $.getJSON('/board', {
                                             x: i,
                                             y: j,
                                             user: user,
                                             opened: "hata_reset",
-                                        
-                                        //game_data_make();
                                     //右クリック処理
                                     }, render);
                                 }).on('contextmenu',function(){
@@ -215,12 +154,6 @@ function user_name_input(){
                                                 user: user,
                                                 opened: "hata",
                                             }, render);
-                                            /*旗データをローカルに保存*/
-                                            //game_data_make(i,j);
-                                            //console.log(game_data);
-                                            //localStorage.setItem('game_data', JSON.stringify(game_data));
-                                            
-                                            //return false;
                                         }).css({
                                         width:"30px",
                                         height:"30px",
@@ -282,7 +215,7 @@ function user_name_input(){
                                             y: j,
                                             user: user
                                         }, render);
-                                        //game_data_make();
+
                                     }).on('contextmenu',function(){
                                         　　//右クリック処理
                                             $.getJSON('/board', {
@@ -291,12 +224,6 @@ function user_name_input(){
                                                 user: user,
                                                 opened: "hata"
                                             }, render);
-                                            /*旗データをローカルに保存*/
-                                            //game_data_make(i,j);
-                                            ///console.log(game_data);
-                                            //localStorage.setItem('game_data', JSON.stringify(game_data));
-                                            
-                                            //return false;
                                         }).css({
                                         width:"30px",
                                         height:"30px",
@@ -307,23 +234,14 @@ function user_name_input(){
                                         overflow:"hidden",
                                         borderRadius:"5px",
                                         boxShadow: "2px 2px 4px gray"
-   
                                     }).hover(function() {
-
                                         // カーソルが当たった時の処理
                                         $(this).css("background-color", "#32CD32");  //limegreen
-
                                         }, function() {
-
                                         // カーソルが離れた時の処理
                                         $(this).css("background-color", "#7CFC00");// 戻る　lawngreen
-
-                                        });
-                                    
-                                   
-                                        break;
-                                        
-                                    
+                                        });                                 
+                                        break;                                  
                                     case true:
                                         if(board[i][j].next_to > 0){
                                             $('<td id = "td' + i + '">').appendTo('#tr' + j).css({
@@ -359,32 +277,11 @@ function user_name_input(){
                             }                      
                         }
                     }
-
-
                     if(board[11] && board[11].game_over === 'game_over'){
-                        
-                            //var result = confirm(user + 'さんの点数は' + board[10].tensuu + '点です\nリセットしてゲームをしたい場合は、OK\nゲームを終了する場合は、キャンセル\nを選択してください。');
-                            alert(user + 'さんの点数は' + board[10].tensuu + '点です。\nお疲れ様でした。\nリセットしてゲームをしたい場合は、リセットボタンを押してください。');
-                            //if( result ) {
-                                localStorage.setItem('game_data', '');
-                                //console.log('localStorage.game_data');
-                                
-                            
+                            alert(user + 'さんの点数は' + board[10].tensuu + '点です。\nお疲れ様でした。\nリセットしてゲームをしたい場合は、リセットボタンを押してください。');                           
                     }                     
-                                
-                            //else {
-                            
-                                //キャンセルを押した場合
-                            //    alert('お疲れ様でした。また、お願いします。');
-                            
-                            //}
         }
-                //}
-            /*} */      
-                
-            
-            
-        
+       
 /*画像選択*/
         function backgroundPosition(backgroundPosition_num){
             /*let backgroundPosition = 2;*/
@@ -418,7 +315,7 @@ function user_name_input(){
                     return "-240px";  //？
                     break;
                 case 10:
-                    return "-270px";  // 旗
+                    return "-268px";  // 旗
                     break;
                 case 11:
                     return "-300px";
@@ -438,15 +335,16 @@ function user_name_input(){
            // console.log(game_data[x][y]);
         }
 
-        
-        
+        /*最初の画面*/
+        $.getJSON('/board', render);
 
-        //setInterval(() => {
+        /*setInterval(() => {
             // 0.5秒ごとにサーバーにポーリング
             $.getJSON('/board', render);
-        //}, 500);
+        }, 500);
+        */
 
-        /* リセットボタン8*/
+        /* リセットボタン*/
         $('#reset').click(function() {
             $.getJSON('/reset', {
                 user: user,

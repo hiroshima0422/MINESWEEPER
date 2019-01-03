@@ -29,8 +29,12 @@ function basic_data_make(){
             }
         }
 
-       //０連鎖 x=4; y=4; スタート
-       ary[4][4].opened = true;
+        for ( let i = width/2-1;  i < width/2+1;  i++) {           
+            for(let j = height/2-1; j < height/2+1; j++) {        
+                    ary[i][j].opened = true;       
+            }
+        }
+
 
         //ランダムに10個の爆弾を作成
         let count = 0;
@@ -45,55 +49,7 @@ function basic_data_make(){
             }
             ary[rand_y][rand_x].hasBom = true;
             count ++;
-        }
-        
-         //０連鎖 x=4; y=4; スタート
-         //調べるセル
-         x=4; y=4;
-         //ary[i][j].opened = true;       
- 
-
-          //8マス判定配列
-            const ary_next_to = [[-1,1],
-            [-1,0],
-            [-1,-1],
-            [0,1],
-            [0,-1],
-            [1,1],
-            [1,0],
-            [1,-1]];
-
-            //let ary_next_to_cnt = 0; 
-            let ary_next_to_sum = 0;
-            let opened_num = 0;
-            for(let k = 0; k < 8; k++) {
-                if(x + ary_next_to[k][0]>=0 && y + ary_next_to[k][0]<=9){
-                    if(y + ary_next_to[k][1]>=0 && y + ary_next_to[k][1]<=9){          
-                        if(ary[x + ary_next_to[k][0]][y + ary_next_to[k][1]].hasBom === true){
-                            ary_next_to_sum += 1; // 8マスに爆弾の数
-                        }
-                        /*オープン可能性選択 8マスに1つ以上openしたセルを持つかカウント*/
-                        if(ary[x + ary_next_to[k][0]][y + ary_next_to[k][1]].opened === true){
-                            opened_num += 1;　　
-                        }
-                    }
-                }
-            }
-
-            console.log(ary_next_to_sum);
-            console.log(opened_num);
-            //ary[4][4].opened = true;
-            if(ary_next_to_sum > 0){
-
-            }else{
-
-            }
-
-
-
-            
-
-
+        } 
         ary['user'] = new Array();
 
         //console.log(ary['user']);
